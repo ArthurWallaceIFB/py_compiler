@@ -1,0 +1,20 @@
+if (x==10)then x=1 endIf
+
+if ( x == 9 ) then
+x = 2
+else
+x = 11
+endIf
+
+
+while ( x > y ) do
+y = 10
+endWhile
+
+x =10
+c =x*10
+print( c )
+
+op = (c/10)+2*4
+op2 = c/10+2*4
+op3 = (1+2)/(12*5)
