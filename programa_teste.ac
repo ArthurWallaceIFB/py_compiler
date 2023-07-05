@@ -1,4 +1,6 @@
-if (x==10)then x=1 endIf
+if (x==10) then
+x = 1
+endIf
 
 if ( x == 9 ) then
 x = 2
@@ -18,3 +20,4 @@ print( c )
 op = (c/10)+2*4
 op2 = c/10+2*4
 op3 = (1+2)/(12*5)
+op4 = 9.5

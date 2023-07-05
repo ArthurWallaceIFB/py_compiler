@@ -18,45 +18,44 @@ def create_ac_grammar()->Grammar:
     G.add_terminal('div')
     G.add_terminal('inum')
     G.add_terminal('fnum')
-    G.add_terminal('nomeVariavel')
-    G.add_terminal('lbracket')   #[
-    G.add_terminal('rbracket')   #]
-    G.add_terminal('lbrace')     #{
-    G.add_terminal('rbrace')     #}
+    G.add_terminal('nomeVariavel') #]  #}
     G.add_terminal('lparen')     #(
-    G.add_terminal('rparen')  #;
-    G.add_terminal('comma')       #,
+    G.add_terminal('rparen')  #;   #,
     G.add_terminal('maior')       #
     G.add_terminal('maiorIgual')
     G.add_terminal('menor')
     G.add_terminal('menorIgual')
     G.add_terminal('igual')
+    G.add_terminal('diferente')
+    G.add_terminal('&&')
+    G.add_terminal('||')
+    G.add_terminal('!')
     G.add_terminal('if')
     G.add_terminal('else')
-    G.add_terminal('while')
-    G.add_terminal('endWhile')
-    G.add_terminal('do')
     G.add_terminal('endIf')
-    G.add_terminal('diferente')
-    G.add_terminal('print')
-    G.add_terminal('$')
     G.add_terminal('then')
+    G.add_terminal('while')
+    G.add_terminal('do')
+    G.add_terminal('endWhile')
+    G.add_terminal('print')
     G.add_terminal('input')
-
-
+    G.add_terminal('$')
 
 
     G.add_nonterminal('Programa')
+    G.add_nonterminal('Bloco')
     G.add_nonterminal('Declaracoes')
     G.add_nonterminal('Declaracao')
-    G.add_nonterminal('Declaracao_Variaveis')
-    G.add_nonterminal('Instrucao_Repeitcao')
+    G.add_nonterminal('Identificador')
     G.add_nonterminal('Atribuicao')
-    G.add_nonterminal('Instrucao_Condicional')
-    G.add_nonterminal('Bloco')
     G.add_nonterminal('Tipo')
     G.add_nonterminal('Expressao')
     G.add_nonterminal('Expressao_Aritmetica')
+    G.add_nonterminal('Expressao_logica')
+    G.add_nonterminal('Logica_and_or')
+    G.add_nonterminal('Logica_and')
+    G.add_nonterminal('Logica_or')
+    G.add_nonterminal('Logica_not')
     G.add_nonterminal('T')
     G.add_nonterminal('T2')
     G.add_nonterminal('E2')
@@ -69,13 +68,10 @@ def create_ac_grammar()->Grammar:
     G.add_nonterminal('Expressao_comparativa')
     G.add_nonterminal('Expressao_aritmetica')
     G.add_nonterminal('Comparacao')
-    G.add_nonterminal('Constante')
-    G.add_nonterminal('Operacao')
-    G.add_nonterminal('Identificador')
     G.add_nonterminal('Instrucao_print')
-    G.add_nonterminal('Entao')
     G.add_nonterminal('Leitura')
-
+    G.add_nonterminal('Expressao_logica_2')
+    
     G.add_production('Programa', ['Declaracoes','Bloco','$'])
     G.add_production('Declaracoes', ['Declaracao', 'Declaracoes'])
     G.add_production('Declaracoes', [])
@@ -98,11 +94,35 @@ def create_ac_grammar()->Grammar:
 
     G.add_production('Identificador',['id'])
 
-    G.add_production('Estrutura_repeticao',['while','lparen','Expressao_comparativa','rparen','do','Bloco','endWhile'])
-    G.add_production('Estrutura_decisao', ['if', 'lparen', 'Expressao_comparativa', 'rparen', 'then', 'Bloco', 'Senao','endIf'])
+    # Repeticao
+    G.add_production('Estrutura_repeticao',['while','lparen','Expressao_logica','rparen','do','Bloco','endWhile'])
+
+    # Decisao
+    G.add_production('Estrutura_decisao', ['if', 'lparen', 'Expressao_logica','rparen', 'then', 'Bloco', 'Senao','endIf'])
     G.add_production('Senao', [])
     G.add_production('Senao', ['else','Bloco'])
-
+    
+    #Logica
+    G.add_production('Expressao_logica',['Expressao_comparativa','Expressao_logica_2'])
+    G.add_production('Expressao_logica', ['Logica_not','Expressao_logica'])
+    G.add_production('Expressao_logica_2', ['Logica_and_or','Expressao_logica'])
+    G.add_production('Expressao_logica_2', [])
+    G.add_production('Logica_and_or',['Logica_and'])
+    G.add_production('Logica_and_or',['Logica_or'])
+    G.add_production('Logica_and',['&&'])
+    G.add_production('Logica_or',['||'])
+    G.add_production('Logica_not',['!'])
+    
+    # Comparacao
+    G.add_production('Expressao_comparativa', ['Expressao_aritmetica', 'Comparacao', 'Expressao_aritmetica'])
+    G.add_production('Comparacao', ['maior'])
+    G.add_production('Comparacao', ['maiorIgual'])
+    G.add_production('Comparacao', ['menor'])
+    G.add_production('Comparacao', ['menorIgual'])
+    G.add_production('Comparacao', ['igual'])
+    G.add_production('Comparacao', ['diferente'])
+    
+    #Aritmetica
     G.add_production('Expressao_aritmetica', ['T','E2'])
     G.add_production('E2', [])
     G.add_production('E2', ['plus', 'T', 'E2'])
@@ -116,13 +136,7 @@ def create_ac_grammar()->Grammar:
     G.add_production('F',['id'])
     G.add_production('F', ['lparen', 'Expressao_aritmetica', 'rparen'])
 
-    G.add_production('Expressao_comparativa', ['Expressao_aritmetica', 'Comparacao', 'Expressao_aritmetica'])
-    G.add_production('Comparacao', ['maior'])
-    G.add_production('Comparacao', ['maiorIgual'])
-    G.add_production('Comparacao', ['menor'])
-    G.add_production('Comparacao', ['menorIgual'])
-    G.add_production('Comparacao', ['igual'])
-    G.add_production('Comparacao', ['diferente'])
+    
     return G
 
 
@@ -145,6 +159,7 @@ regex_table = {
     r'^\*$':'mul',
     r'^\/$':'div',
     r'^==$':'igual',
+    r'^!=$':'diferente',
     r'^>$' :'maior',
     r'^>=$':'maiorIgual',
     r'^<=$':'menorIgual',
@@ -165,9 +180,9 @@ def lexical_analyser(filepath) -> str:
                 continue
 
             # Use expressões regulares para identificar os tokens
-            tokens = re.findall(r'\w+|==|<=|>=|<>|[\(\)\[\]\{\};,=+\-*/><]', line)
-
-            print(tokens, '\n')
+            tokens = re.findall(r'\d+\.\d+|\w+|==|<=|>=|<>|[\(\)\[\]\{\};,=+\-*/><]', line)
+            #tokens = re.findall(r'\w+|==|<=|>=|<>|[\(\)\[\]\{\};,=+\-*/><]', line)
+            print(tokens)
             for t in tokens:
                 found = False
                 for regex, category in regex_table.items():
