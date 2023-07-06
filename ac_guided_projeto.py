@@ -140,8 +140,6 @@ def create_ac_grammar()->Grammar:
     return G
 
 
-
-
 regex_table = {
     r'^float$': 'float',
     r'^int$': 'int',
@@ -153,6 +151,9 @@ regex_table = {
     r'^endIf$':'endIf',
     r'^then$':'then',
     r'^print$': 'print',
+    r'^and$':'and',
+    r'^or$':'or',
+    r'^not$': 'not',
     r'^=$': 'assignment',
     r'^\+$': 'plus',
     r'^\-$': 'minus',
@@ -196,27 +197,6 @@ def lexical_analyser(filepath) -> str:
 
     token_sequence.append('$')
     return token_sequence
-
-# def lexical_analyser(filepath) -> str:
-#     with open(filepath,'r') as f:
-#         token_sequence = []
-#         tokens = []
-#         for line in f:
-#             line = line.strip()  
-#             if not line:
-#                 continue
-#             tokens = tokens + line.split(' ')
-#         for t in tokens:
-#             found = False
-#             for regex,category in regex_table.items():
-#                 if re.match(regex,t):
-#                     token_sequence.append(category)
-#                     found=True
-#             if not found:
-#                 print('Lexical error: ',t)
-#                 exit(0) 
-#     token_sequence.append('$')
-#     return token_sequence
 
 
 if __name__ == '__main__':
