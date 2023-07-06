@@ -13,7 +13,11 @@ while ( x > y ) do
 y = 10
 endWhile
 
-if (x != 10 and x == 11) then
+if (x != 10 && x == 11) then
+y = 30
+endIf
+
+if (x != 10 || x == 11) then
 y = 30
 endIf
 

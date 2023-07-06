@@ -152,10 +152,10 @@ regex_table = {
     r'^then$':'then',
     r'^print$': 'print',
     r'^input$': 'input',
-    r'^and$':'and',
+    r'^&&$':'and',
     r'^!=$':'diferente',
-    r'^or$':'or',
-    r'^not$': 'not',
+    r'^\|\|$':'or',
+    r'^!$': 'not',
     r'^==$':'igual',
     r'^=$': 'assignment',
     r'^\+$': 'plus',
@@ -181,10 +181,8 @@ def lexical_analyser(filepath) -> str:
             if not line:
                 continue
 
-            # Use expressões regulares para identificar os tokens
-            tokens = re.findall(r'\d+\.\d+|\w+|==|<=|>=|<>|[\(\)\[\]\{\};,=+\-*/><]', line)
-            #tokens = re.findall(r'\w+|==|<=|>=|<>|[\(\)\[\]\{\};,=+\-*/><]', line)
-            #print(tokens)
+            tokens = re.findall(r'\d+\.\d+|\w+|!=|==|<=|>=|<>|&&|\|\||[\(\)\[\]\{\};,!=+\-*/><]', line)
+            print(tokens)
             for t in tokens:
                 found = False
                 for regex, category in regex_table.items():
@@ -200,12 +198,12 @@ def lexical_analyser(filepath) -> str:
     return token_sequence
 
 
-if __name__ == '__main__':
-    filepath = 'programa_teste.ac'
-    tokens = lexical_analyser(filepath)
-    print(tokens, 'tokens')
-    ts = token_sequence(tokens)
-    print(ts)
-    G = create_ac_grammar()
-    parser = guided_ll1_parser(G)
-    parser.parse(ts)
+# if __name__ == '__main__':
+#     filepath = 'programa_teste.ac'
+#     tokens = lexical_analyser(filepath)
+#     print(tokens, 'tokens')
+#     ts = token_sequence(tokens)
+#     print(ts)
+#     G = create_ac_grammar()
+#     parser = guided_ll1_parser(G)
+#     parser.parse(ts)
