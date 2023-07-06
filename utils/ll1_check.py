@@ -1,5 +1,5 @@
-from grammar import Grammar
-from predict import predict_algorithm
+from utils.grammar import Grammar
+from utils.predict import predict_algorithm
 
 
 def is_ll1(G: Grammar, pred_alg: predict_algorithm) -> bool:

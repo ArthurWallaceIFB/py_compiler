@@ -1,5 +1,5 @@
-from derives_empty_string import derives_empty_string_algorithm
-from grammar import Grammar
+from utils.derives_empty_string import derives_empty_string_algorithm
+from utils.grammar import Grammar
 
 
 class first_algorithm:

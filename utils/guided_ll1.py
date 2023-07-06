@@ -1,7 +1,7 @@
-from grammar import Grammar
-from predict import predict_algorithm
-from token_sequence import token_sequence
-from ll1_check import is_ll1
+from utils.grammar import Grammar
+from utils.predict import predict_algorithm
+from utils.token_sequence import token_sequence
+from utils.ll1_check import is_ll1
 
 
 class guided_ll1_parser:

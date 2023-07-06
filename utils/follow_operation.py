@@ -1,6 +1,6 @@
-from grammar import Grammar
-from derives_empty_string import derives_empty_string_algorithm
-from first_operation import first_algorithm
+from utils.grammar import Grammar
+from utils.derives_empty_string import derives_empty_string_algorithm
+from utils.first_operation import first_algorithm
 
 
 class follow_algorithm:
