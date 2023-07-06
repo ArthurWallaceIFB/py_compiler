@@ -1,4 +1,6 @@
+from ac_guided_projeto import lexical_analyser
 from grammar import Grammar
+from guided_ll1 import guided_ll1_parser
 from predict import predict_algorithm
 from token_sequence import token_sequence
 
@@ -417,9 +419,35 @@ def F(ts: token_sequence, p: predict_algorithm) -> None:
         CompilationError(pred)
 
 
+# if __name__ == '__main__':
+#     G = create_example_grammar()
+#     print_grammar(G)
+#     predict_alg = predict_algorithm(G) 
+#     ts = token_sequence(['id', 'assignment', 'inum','$'])
+#     Programa(ts,predict_alg)
+
+
 if __name__ == '__main__':
+    filepath = 'programa_teste.ac'
+    tokens = lexical_analyser(filepath)
+    print(tokens, 'tokens')
+    ts = token_sequence(tokens)
     G = create_example_grammar()
     print_grammar(G)
+    parser = guided_ll1_parser(G)
+    parser.parse(ts)
+    print("\n\n -------- FIM ANALISADOR LEXICO ----------- \n\n")
+    print("\n\n tokens: ", tokens)
     predict_alg = predict_algorithm(G) 
-    ts = token_sequence(['id', 'assignment', 'inum','$'])
+    ts = token_sequence(tokens)
     Programa(ts,predict_alg)
+    
+# if __name__ == '__main__':
+#     filepath = 'programa_teste.ac'
+#     tokens = lexical_analyser(filepath)
+#     print(tokens, 'tokens')
+#     ts = token_sequence(tokens)
+#     print(ts)
+#     G = create_ac_grammar()
+#     parser = guided_ll1_parser(G)
+#     parser.parse(ts)
