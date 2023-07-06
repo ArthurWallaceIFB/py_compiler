@@ -3,7 +3,7 @@ from predict import predict_algorithm
 
 
 def is_ll1(G: Grammar, pred_alg: predict_algorithm) -> bool:
-    print("\n --- LL1 CHECK --- \n")
+    #print("\n --- LL1 CHECK --- \n")
     for A in G.nonterminals():
         # print('Analysing',A)
         pred_set = set()

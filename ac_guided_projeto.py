@@ -151,16 +151,17 @@ regex_table = {
     r'^endIf$':'endIf',
     r'^then$':'then',
     r'^print$': 'print',
+    r'^input$': 'input',
     r'^and$':'and',
+    r'^!=$':'diferente',
     r'^or$':'or',
     r'^not$': 'not',
+    r'^==$':'igual',
     r'^=$': 'assignment',
     r'^\+$': 'plus',
     r'^\-$': 'minus',
     r'^\*$':'mul',
     r'^\/$':'div',
-    r'^==$':'igual',
-    r'^!=$':'diferente',
     r'^>$' :'maior',
     r'^>=$':'maiorIgual',
     r'^<=$':'menorIgual',
@@ -183,7 +184,7 @@ def lexical_analyser(filepath) -> str:
             # Use expressões regulares para identificar os tokens
             tokens = re.findall(r'\d+\.\d+|\w+|==|<=|>=|<>|[\(\)\[\]\{\};,=+\-*/><]', line)
             #tokens = re.findall(r'\w+|==|<=|>=|<>|[\(\)\[\]\{\};,=+\-*/><]', line)
-            print(tokens)
+            #print(tokens)
             for t in tokens:
                 found = False
                 for regex, category in regex_table.items():

@@ -8,7 +8,6 @@ def print_grammar(G: Grammar) -> None:
     print("\n\n ------ GRAMÁTICA -------\n\n")
     print('Terminais:', ' '.join([x for x in G.terminals()]), '\n')
     print('Não-terminais:', ' '.join([X for X in G.nonterminals()]), '\n')
-    # print(G.productions())
     print('Produções:', ' '.join(
         ['id: ' + str(p) + ' ' + str(G.lhs(p)) + '->' + str(G.rhs(p)) + '\n' for p in G.productions()]))
     print('\n\n')
@@ -193,9 +192,9 @@ def Comando(ts: token_sequence, p: predict_algorithm) -> None:
         Instrucao_print(ts, p)
     elif ts.peek() in p.predict(11):  # Leitura
         Leitura(ts, p)
-    elif ts.peek() in p.predict(12):  # Estrutura_repeticao
+    elif ts.peek() in p.predict(13):  # Estrutura_repeticao
         Estrutura_repeticao(ts, p)
-    elif ts.peek() in p.predict(13):  # Estrutura_decisao
+    elif ts.peek() in p.predict(12):  # Estrutura_decisao
         Estrutura_decisao(ts, p)
     else:
         CompilationError(pred)
@@ -307,21 +306,21 @@ def Logica_and_or(ts: token_sequence, p: predict_algorithm) -> None:
 def Logica_and(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(28)
     if ts.peek() in p.predict(28):
-        ts.match('&&')
+        ts.match('and')
     else:
         CompilationError(pred)
 
 def Logica_or(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(29)
     if ts.peek() in p.predict(29):
-        ts.match('||')
+        ts.match('or')
     else:
         CompilationError(pred)
 
 def Logica_not(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(30)
     if ts.peek() in p.predict(30):
-        ts.match('!')
+        ts.match('not')
     else:
         CompilationError(pred)
 
@@ -419,35 +418,17 @@ def F(ts: token_sequence, p: predict_algorithm) -> None:
         CompilationError(pred)
 
 
-# if __name__ == '__main__':
-#     G = create_example_grammar()
-#     print_grammar(G)
-#     predict_alg = predict_algorithm(G) 
-#     ts = token_sequence(['id', 'assignment', 'inum','$'])
-#     Programa(ts,predict_alg)
-
 
 if __name__ == '__main__':
     filepath = 'programa_teste.ac'
     tokens = lexical_analyser(filepath)
-    print(tokens, 'tokens')
     ts = token_sequence(tokens)
     G = create_example_grammar()
-    print_grammar(G)
+    #print_grammar(G)
     parser = guided_ll1_parser(G)
     parser.parse(ts)
-    print("\n\n -------- FIM ANALISADOR LEXICO ----------- \n\n")
-    print("\n\n tokens: ", tokens)
     predict_alg = predict_algorithm(G) 
     ts = token_sequence(tokens)
     Programa(ts,predict_alg)
+    print("\n✅ Compilação concluída com sucesso! ✅\n")
     
-# if __name__ == '__main__':
-#     filepath = 'programa_teste.ac'
-#     tokens = lexical_analyser(filepath)
-#     print(tokens, 'tokens')
-#     ts = token_sequence(tokens)
-#     print(ts)
-#     G = create_ac_grammar()
-#     parser = guided_ll1_parser(G)
-#     parser.parse(ts)
