@@ -45,12 +45,12 @@ def lexical_analyser(filepath) -> str:
                 continue
 
             tokens = re.findall(r'\d+\.\d+|\w+|!=|==|<=|>=|<>|&&|\|\||[\(\)\[\]\{\};,!=+\-*/><]', line)
-            print(tokens)
+            # print(tokens)
             for t in tokens:
                 found = False
                 for regex, category in regex_table.items():
                     if re.fullmatch(regex, t):
-                        token_sequence.append(category)
+                        token_sequence.append((category, t))
                         found = True
                         break
                 if not found:

@@ -1,10 +1,13 @@
 
+from functions.codeGenerator import emit_code, get_var_address, insert_into_symbol_table
 from functions.lexico_ac_guided import lexical_analyser
 from utils.predict import predict_algorithm
 from utils.token_sequence import token_sequence
 
 
 def Programa(ts: token_sequence, p: predict_algorithm) -> None:
+    clear_result_file()
+    print("\n\n\n ------- Programa\n\n\n")
     pred = p.predict(0)
     if ts.peek() in  p.predict(0): #'Declaracoes','Bloco','$'
         Declaracoes(ts, p)
@@ -26,7 +29,10 @@ def Declaracoes(ts: token_sequence, p: predict_algorithm) -> None:
 def Declaracao(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(3)
     if ts.peek() in  p.predict(3): #'Tipo', 'Identificador'
-        Tipo(ts, p)
+        type = Tipo(ts, p)
+        var_name = ts.getValue()
+        insert_into_symbol_table(var_name,type)
+        emit_code('PUSHIMM 0')
         Identificador(ts, p)
     else:
         CompilationError(pred)
@@ -35,12 +41,15 @@ def Tipo(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(4).union(p.predict(5))
     if ts.peek() in p.predict(4):  # int
         ts.match('int')
+        return('int')
     elif ts.peek() in p.predict(5):  # float
         ts.match('float')
+        return('float')
     else:
         CompilationError(pred)
         
 def Bloco(ts: token_sequence, p: predict_algorithm) -> None:
+    print("Bloco")
     pred = p.predict(6)
     if ts.peek() in p.predict(6):  # 'Comando','Comandos'
         Comando(ts, p)
@@ -96,16 +105,20 @@ def Instrucao_print(ts: token_sequence, p: predict_algorithm) -> None:
 def Atribuicao(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(16)
     if ts.peek() in p.predict(16):  # 'Identificador', 'assignment', 'Expressao_aritmetica'
-        Identificador(ts, p)
+        var_name = Identificador(ts, p)
         ts.match('assignment')
         Expressao_aritmetica(ts, p)
+        var_address = get_var_address(var_name)
+        emit_code('STOREOFF '+str(var_address))
     else:
         CompilationError(pred)
 
 def Identificador(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(17)
+    var_name = ts.getValue()
     if ts.peek() in p.predict(17): #id
         ts.match('id')
+        return var_name
     else:
         CompilationError(pred)
 
@@ -267,6 +280,7 @@ def T2(ts: token_sequence, p: predict_algorithm) -> None:
         ts.match('mul')
         F(ts, p)
         T2(ts, p)
+        emit_code('TIMES')
     elif ts.peek() in p.predict(44):  # / F T2
         ts.match('div')
         F(ts, p)
@@ -279,11 +293,16 @@ def T2(ts: token_sequence, p: predict_algorithm) -> None:
 def F(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(46).union(p.predict(47)).union(p.predict(48)).union(p.predict(49))
     if ts.peek() in p.predict(46):  # inum
+        num_value = ts.getValue()
         ts.match('inum')
+        emit_code('PUSHIMM '+num_value)
     elif ts.peek() in p.predict(47):  # fnum
         ts.match('fnum')
     elif ts.peek() in p.predict(48):  # id
+        var_name = ts.getValue()
         ts.match('id')
+        var_address = get_var_address(var_name)
+        emit_code('PUSHOFF '+ str(var_address))
     elif ts.peek() in p.predict(49):  # ( Expressao_aritmetica )
         ts.match('lparen')
         Expressao_aritmetica(ts, p)

@@ -1,3 +1,14 @@
+int x
+int y
+int c
+float op
+float op2
+float op3
+float op4
+
+
+x = 20
+
 if (x == 10) then
 x = 1
 endIf
@@ -24,7 +35,12 @@ endIf
 print(x)
 input(x)
 
+if(!x == 10) then
+y = 50
+endIf
+
 x = 10
+
 c = x*10
 print(c)
 
