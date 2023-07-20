@@ -13,12 +13,12 @@ class Compiler:
         print('symbols_table depois: ', self.symbols_table)
 
     def emit_code(self, code):
-        with open("../results/resultado.sam", 'a') as f:
+        with open("./results/resultado.sam", 'a') as f:
             f.write(code + '\n')
 
     def clear_result_file(self):
-        if os.path.exists("../results/resultado.sam"):
-            os.remove("../results/resultado.sam")
+        if os.path.exists("./results/resultado.sam"):
+            os.remove("./results/resultado.sam")
             return
         else:
             print("\n\n\nResult file not found!\n\n\n")

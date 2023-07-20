@@ -8,7 +8,7 @@ from utils.token_sequence import token_sequence
 
 
 if __name__ == '__main__':
-    filepath = '../tests/programa_teste_3.ac'
+    filepath = './tests/programa_teste_3.ac'
     tokens = lexical_analyser(filepath)
     G = create_grammar()
     parser = guided_ll1_parser(G)
