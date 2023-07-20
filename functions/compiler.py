@@ -5,6 +5,7 @@ class Compiler:
     def __init__(self):
         self.symbols_table = []
         self.address = 0
+        self.labelCount = 0
 
     def insert_into_symbol_table(self, var_name, tipo):
         print('symbols_table: ', self.symbols_table)
@@ -27,3 +28,7 @@ class Compiler:
         for x in self.symbols_table:
             if x['var_name'] == var_name:
                 return x['address']
+    
+    def generate_label(self):
+        self.labelCount += 1
+        return f"label_{self.labelCount}"

@@ -145,10 +145,25 @@ def Estrutura_decisao(ts: token_sequence, p: predict_algorithm) -> None:
         ts.match('lparen')
         Expressao_logica(ts, p)
         ts.match('rparen')
+        
+        if_label = compiler.generate_label()
+        end_if_label = compiler.generate_label()
+        # Gera código para pular para o bloco "else" caso a condição seja falsa
+        compiler.emit_code('JUMPC ' + end_if_label)
         ts.match('then')
         Bloco(ts, p)
         Senao(ts, p)
+        
+          # Gera um rótulo para o fim da estrutura condicional (fora do "else" também)
+
+        compiler.emit_code('JUMP ' + end_if_label)
+
+        # Gera o rótulo para o início do bloco "if"
+        compiler.emit_code(if_label + ":")
+        
         ts.match('endIf')
+          # Gera o rótulo para o fim da estrutura condicional (fora do "else" também)
+        compiler.emit_code(end_if_label + ":")
     else:
         CompilationError(pred)
 
@@ -158,7 +173,13 @@ def Senao(ts: token_sequence, p: predict_algorithm) -> None:
         return
     elif ts.peek() in p.predict(21):  # Senao
         ts.match('else')
+        else_label = compiler.generate_label()
+
+        # Gera código para pular para o fim da estrutura condicional após o bloco "if" ser executado
+        compiler.emit_code('JUMP ' + else_label)
         Bloco(ts, p)
+        
+        compiler.emit_code(else_label + ":")
     else:
         CompilationError(pred)
 
@@ -218,8 +239,11 @@ def Expressao_comparativa(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(31)
     if ts.peek() in p.predict(31):
         Expressao_aritmetica(ts, p)
-        Comparacao(ts, p)
+        comp = Comparacao(ts, p)
         Expressao_aritmetica(ts, p)
+        compiler.emit_code("CMP")
+        if(comp):
+            compiler.emit_code(comp)
     else:
         CompilationError(pred)
 
@@ -228,10 +252,13 @@ def Comparacao(ts: token_sequence, p: predict_algorithm) -> None:
     pred = p.predict(32).union(p.predict(33)).union(p.predict(34)).union(p.predict(35)).union(p.predict(36)).union(p.predict(37))
     if ts.peek() in p.predict(32):  # maior
         ts.match('maior')
+        return 'ISPOS'
     elif ts.peek() in p.predict(33):  # maiorIgual
         ts.match('maiorIgual')
+        return ('ISNEG')
     elif ts.peek() in p.predict(34):  # menor
         ts.match('menor')
+        return ('ISNEG')
     elif ts.peek() in p.predict(35):  # menorIgual
         ts.match('menorIgual')
     elif ts.peek() in p.predict(36):  # igual

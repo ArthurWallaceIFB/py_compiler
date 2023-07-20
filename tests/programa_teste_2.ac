@@ -1,4 +1,9 @@
 int x
+int y
 
-x = 2
 
+x = 20
+
+if (x == 20) then
+y = 1
+endIf
