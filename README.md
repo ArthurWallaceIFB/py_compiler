@@ -28,3 +28,4 @@ Para executar o compilador, basta rodar o arquivo "runner.py" no terminal:
 
 ```bash
 python runner.py
+
