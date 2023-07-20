@@ -1,18 +1,20 @@
 
-from functions.codeGenerator import emit_code, get_var_address, insert_into_symbol_table
+from functions.compiler import Compiler
 from functions.lexico_ac_guided import lexical_analyser
 from utils.predict import predict_algorithm
 from utils.token_sequence import token_sequence
 
+compiler = Compiler()
 
 def Programa(ts: token_sequence, p: predict_algorithm) -> None:
-    clear_result_file()
+    compiler.clear_result_file()
     print("\n\n\n ------- Programa\n\n\n")
     pred = p.predict(0)
     if ts.peek() in  p.predict(0): #'Declaracoes','Bloco','$'
         Declaracoes(ts, p)
         Bloco(ts, p)
         ts.match('$')
+        compiler.emit_code("STOP")
     else:
         CompilationError(pred)
     
@@ -31,8 +33,8 @@ def Declaracao(ts: token_sequence, p: predict_algorithm) -> None:
     if ts.peek() in  p.predict(3): #'Tipo', 'Identificador'
         type = Tipo(ts, p)
         var_name = ts.getValue()
-        insert_into_symbol_table(var_name,type)
-        emit_code('PUSHIMM 0')
+        compiler.insert_into_symbol_table(var_name,type)
+        compiler.emit_code('PUSHIMM 0')
         Identificador(ts, p)
     else:
         CompilationError(pred)
@@ -108,8 +110,8 @@ def Atribuicao(ts: token_sequence, p: predict_algorithm) -> None:
         var_name = Identificador(ts, p)
         ts.match('assignment')
         Expressao_aritmetica(ts, p)
-        var_address = get_var_address(var_name)
-        emit_code('STOREOFF '+str(var_address))
+        var_address = compiler.get_var_address(var_name)
+        compiler.emit_code('STOREOFF '+str(var_address))
     else:
         CompilationError(pred)
 
@@ -255,10 +257,12 @@ def E2(ts: token_sequence, p: predict_algorithm) -> None:
         ts.match('plus')
         T(ts, p)
         E2(ts, p)
+        compiler.emit_code('ADD')
     elif ts.peek() in p.predict(41):  # - T E2
         ts.match('minus')
         T(ts, p)
         E2(ts, p)
+        compiler.emit_code('SUB')
     elif ts.peek() in p.predict(39):  # Vazio
         return
     else:
@@ -280,11 +284,12 @@ def T2(ts: token_sequence, p: predict_algorithm) -> None:
         ts.match('mul')
         F(ts, p)
         T2(ts, p)
-        emit_code('TIMES')
+        compiler.emit_code('TIMES')
     elif ts.peek() in p.predict(44):  # / F T2
         ts.match('div')
         F(ts, p)
         T2(ts, p)
+        compiler.emit_code('DIV')
     elif ts.peek() in p.predict(45):  # Vazio
         return
     else:
@@ -295,14 +300,14 @@ def F(ts: token_sequence, p: predict_algorithm) -> None:
     if ts.peek() in p.predict(46):  # inum
         num_value = ts.getValue()
         ts.match('inum')
-        emit_code('PUSHIMM '+num_value)
+        compiler.emit_code('PUSHIMM '+num_value)
     elif ts.peek() in p.predict(47):  # fnum
         ts.match('fnum')
     elif ts.peek() in p.predict(48):  # id
         var_name = ts.getValue()
         ts.match('id')
-        var_address = get_var_address(var_name)
-        emit_code('PUSHOFF '+ str(var_address))
+        var_address = compiler.get_var_address(var_name)
+        compiler.emit_code('PUSHOFF '+ str(var_address))
     elif ts.peek() in p.predict(49):  # ( Expressao_aritmetica )
         ts.match('lparen')
         Expressao_aritmetica(ts, p)

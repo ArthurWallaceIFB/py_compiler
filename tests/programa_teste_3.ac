@@ -1,0 +1,10 @@
+int x
+int y
+int z
+int w
+
+x = 20
+y = 10
+
+z = (x+y)*4
+w = x+y*4
